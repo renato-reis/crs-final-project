@@ -34,9 +34,7 @@ Para a construção dos diagramas, devem ser usados modelos disponíveis em: [Di
 
 ## Diagrama Geral do Nível 1
 
-> Apresente um diagrama conforme o modelo a seguir:
-
-![Modelo de diagrama no nível 1](images/diagrama-barramento.png)
+![Modelo de diagrama no nível 1](images/N1-diagrama-barramento.jpg)
 
 ### Detalhamento da interação de componentes
 
