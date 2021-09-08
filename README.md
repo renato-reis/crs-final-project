@@ -27,6 +27,7 @@ Para a construção dos diagramas, devem ser usados modelos disponíveis em: [Di
 
 # Equipe
 * `Matheus Raposo Frauches Vieira Sias`
+* `Vitor Corrêa Oliveira`
 
 # Nível 1
 
