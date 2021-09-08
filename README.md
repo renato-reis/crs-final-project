@@ -51,7 +51,7 @@ Para a construção dos diagramas, devem ser usados modelos disponíveis em: [Di
 
 > Diagrama do componente, conforme exemplo a seguir:
 
-![Componente](images/N1-message-01.jpg)
+![Componente](N1-message-01.jpg)
 
 **Interfaces**
 > Listagem das interfaces do componente.
@@ -72,7 +72,8 @@ As interfaces listadas são detalhadas a seguir:
 
 > Ou em formato de imagem, conforme exemplo:
 
-![Diagrama de Interface de Mensagens](images/diagrama-interface-mensagens.png)
+![Diagrama de Interface de Mensagens](images/N1-topicos-1.jpg)
+![Diagrama de Interface de Mensagens](images/N1-topicos-2.jpg)
 
 > Diagrama representando o esquema das mensagens JSON utilizadas na interface, pode ser em formato texto conforme exemplo:
 
@@ -92,7 +93,9 @@ As interfaces listadas são detalhadas a seguir:
 
 > Ou em formato de imagem, conforme exemplo:
 
-![Diagrama de Mensagens JSON](images/diagrama-interface-json.png)
+![Diagrama de Mensagens JSON](images/N1-message-01.jpg)
+![Diagrama de Mensagens JSON](images/N1-message-02.jpg)
+![Diagrama de Mensagens JSON](images/N1-message-03.jpg)
 
 # Nível 2
 
