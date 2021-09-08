@@ -51,7 +51,7 @@ Para a construção dos diagramas, devem ser usados modelos disponíveis em: [Di
 
 > Diagrama do componente, conforme exemplo a seguir:
 
-![Componente](diagrama-componente-mensagens.png)
+![Componente](images/N1-message-01.jpg)
 
 **Interfaces**
 > Listagem das interfaces do componente.
