@@ -77,22 +77,6 @@ As interfaces listadas são detalhadas a seguir:
 
 > Diagrama representando o esquema das mensagens JSON utilizadas na interface, pode ser em formato texto conforme exemplo:
 
-~~~json
-{
-  orderId: string,
-  dueDate: date,
-  total: number,
-  items: [
-    {
-         itemid: string,
-         quantity: number
-    }
-  ]  
-}
-~~~
-
-> Ou em formato de imagem, conforme exemplo:
-
 ![Diagrama de Mensagens JSON](images/N1-message-01.jpg)
 ![Diagrama de Mensagens JSON](images/N1-message-02.jpg)
 ![Diagrama de Mensagens JSON](images/N1-message-03.jpg)
