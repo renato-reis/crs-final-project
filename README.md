@@ -104,7 +104,7 @@ As interfaces listadas são detalhadas a seguir:
 
 > Para cada componente será apresentado um documento conforme o modelo a seguir:
 
-## Componente `<Nome do Componente>`
+## Componente `Distribuição de Ofertas`
 
 > Resumo do papel do componente e serviços que ele oferece.
 
