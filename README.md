@@ -26,6 +26,7 @@ Para a construção dos diagramas, devem ser usados modelos disponíveis em: [Di
 # Projeto `CRS - Marketplace`
 
 # Equipe
+* `Daniela Bouwman Codeceira`
 * `Matheus Raposo Frauches Vieira Sias`
 * `Vitor Corrêa Oliveira`
 
