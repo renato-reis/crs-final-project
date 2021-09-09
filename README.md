@@ -26,6 +26,7 @@ Para a construção dos diagramas, devem ser usados modelos disponíveis em: [Di
 # Projeto `CRS - Marketplace`
 
 # Equipe
+* `Amanda Souza Macedo Bacelli`
 * `Matheus Raposo Frauches Vieira Sias`
 
 # Nível 1
@@ -34,26 +35,73 @@ Para a construção dos diagramas, devem ser usados modelos disponíveis em: [Di
 
 ## Diagrama Geral do Nível 1
 
-> Apresente um diagrama conforme o modelo a seguir:
-
-![Modelo de diagrama no nível 1](images/diagrama-barramento.png)
+![Modelo de diagrama no nível 1](images/N1-diagrama-barramento.jpg)
 
 ### Detalhamento da interação de componentes
 
-> O detalhamento deve seguir um formato de acordo com o exemplo a seguir:
+* O componente `Distribuição de Ofertas` interage nos processos abaixo:
+  * **SendAlert**: Interface que recebe a interface fornecida _Subscribe_ do componente `Cliente` que indica que o cliente quer assinar uma oferta de um determinado produto e assim é feita a distribuição das ofertas conforme essa assinatura
+  * **ReceiveChoose**: Interface que recebe a interface _SendChooseCliente_ do componente `Solicita Produto`, quando o cliente escolhe um produto para compra, o componente envia para o componente de Distribuição de Ofertas para que assim ele saiba as escolhas do cliente e prepare ofertas similirares ao produto escolhido
+  * **ReceiveOffer**: tópico que recebe o aviso de quando uma `Loja` cria uma oferta faz a leitura de _CreateOffer_ `product/+/alert`
+  * **AnalyseSearches**: tópico que analisa as buscas realizadas pelo cliente para que possa gerar ofertas similares, faz a leitura de _FindProducts_`product/+/find`
+  * **OrderAnalyser**: Analisa as ordens emitidas pelas `Lojas` através do tópico _Order_ `order/+/send`e assim aprimorar o aprendizado do componente
 
-* O componente `Leilão` inicia o leilão publicando no barramento a mensagem de tópico "`auction/{auctionId}/start`" através da interface `AuctionStart`, iniciando um leilão.
-* Os componentes Loja assinam no barramento mensagens de tópico "`auction/+/start`" através da interface `AuctionEngage`. Quando recebe uma mensagem…
+* O componente `Cliente` interage nos processos abaixo:
+  * **Subscribe**: Se inscreve em uma determinada oferta através da interface _SendAlert_ do componente `Distribuição de Ofertas`
+  * **PaymentOrder**: Recebe os dados para o pagamento para a interface _RequestPayment_ do componente `Pagamento`
+  * **ReceiverOrder**: Recebe a ordem da interface _SendOrder_ do componente `Solicita produto`
+  * **ChooseProductAndStore**: Fornece o produto e a loja escolhida para a compra para a interface _ReceiverProductAndStore_ do componente `Solicita Produto`
+  * **FindProducts**: Envia mensagem ao buscar um produto através do barramento através da mensagem _ShowProducts_ 
+  * **FollowOrder**: Tópico para receber status de ordens emitidas através do tópico _Order_ `order/{orderId}/send`
+
+* O componente `Solicita Produto` interage nos processos abaixo:
+  * **SendOrder**: Envia a order para a interface _ReceiveOrder_ do componente `Cliente` com a Ordem recebida via tópico _SendOrder_ `order/+/send`
+  * **ReceiveProductAndStore**: Interface que recebe o produto e a loja escolhida pelo cliente
+  * **SendChooseClient**: envia a escolha do cliente para o componente `Distribuição de ofertas`
+  * **RequestBuy**: envia um tópico para a loja referente ao produto a ser comprado para a loja
+  
+* O componente `Loja` interage nos processos abaixo:
+  * **SendOrder**: Envia a ordem com o produto para que o cliente possa acompanhar através do tópico _FollowOrder_ `order/{orderId}/send`
+  * **ReceivePayment**: recebe o pagamento através do tópico _SendPayment_ `order/+/payment/+/accept`do componente `Pagamento` 
+  * **CreateOffer**: Cria as ofertas de seus produtos
+  * **ShowProduct**: Exibe o produto quando recebe o tópico de busca através do barramento
+  * **Order**: envia a order quando a compra é solicitada através do _RequestBuy_ `product/+/store/+/buy`
+
+* O componente `Pagamento` interage nos processos abaixo:
+  * **RequestPayment**: solicita o pagamento para a interface do componente `Cliente`
+  * **SendPayment**: envia a mensagem do pagamento da ordem através do barramento
+
 
 > Para cada componente será apresentado um documento conforme o modelo a seguir:
 
-## Componente `<Nome do Componente>`
+## Componente `Distribuição de Ofertas`
+> Componente responsável pela distribuição de ofertas, sendo de origem de assinatura (por desejo do cliente) ou atraves do aprendizado da máquina
 
-> Resumo do papel do componente e serviços que ele oferece.
+![Distribuição de ofertas](images/N1-comp-distribuicao.png)
 
-> Diagrama do componente, conforme exemplo a seguir:
+## Componente `Cliente`
 
-![Componente](diagrama-componente-mensagens.png)
+> Componente responsável por orquestrar todos os fluxos do marketplace, sendo na busca, compra, pagmento e recebimento de oferta
+
+![Componente](images/N1-comp-cliente.png
+
+## Componente `Solicita Produto`
+
+> Componente responsável por enviar a solicitação de compra do produto e reencaminhar a ordem ao cliente. Também auxilia na aprendizagem do componente de Distribuição de Ofertas enviando as escolhas do cliente
+
+![Componente](images/N1-comp-solicita-produto.png)
+
+## Componente `Pagamento`
+
+> Componente responsável emitir e controlar pagamento da ordem
+
+![Componente](images/N1-comp-pagamento.png)
+
+## Componente `Loja`
+
+> Componente responsável emitir ordem, ofertas e exibir seus produtos mediante uma solicitação de busca
+
+![Componente](images/N1-comp-loja.png)
 
 **Interfaces**
 > Listagem das interfaces do componente.
@@ -62,39 +110,276 @@ As interfaces listadas são detalhadas a seguir:
 
 ## Detalhamento das Interfaces
 
-### Interface `<nome da interface>`
+### Interface `FindProducts`
 
-> Resumo do papel da interface.
+> Envia a busca dos produtos feita pelo cliente
 
-> Dados da interface podem ser apresentados em formato texto, conforme exemplo:
+* Type: source
+* Topic: product/+/find
+* Message type: Product
 
-* Type: `sink`
-* Topic: `pedido/+/entrega`
-* Message type: `Order`
+~~~json
+{
+  productId: number,
+  description: string,
+  price: double,
+  stores: [
+    {
+      storeid: number,
+      description: string
+    }
+  ]
+}
+~~~
 
-> Ou em formato de imagem, conforme exemplo:
+### Interface `ShowProduct`
 
-![Diagrama de Interface de Mensagens](images/diagrama-interface-mensagens.png)
+> Exibe os produtos buscados de cada Loja
 
-> Diagrama representando o esquema das mensagens JSON utilizadas na interface, pode ser em formato texto conforme exemplo:
+* Type: sink
+* Topic: product/{productId}/find
+* Message type: Product
+
+~~~json
+{
+  productId: number,
+  description: string,
+  price: double,
+  stores: [
+    {
+      storeid: number,
+      description: string
+    }
+  ]
+}
+~~~
+
+### Interface `AnalyzerSeaches`
+
+> Analisa as buscas feitas pelo cliente para aprendizagem do componente Distribuição de Ofertas
+
+* Type: sink
+* Topic: product/{productId}/find
+* Message type: Product
+
+~~~json
+{
+  productId: number,
+  description: string,
+  price: double,
+  stores: [
+    {
+      storeid: number,
+      description: string
+    }
+  ]
+}
+~~~
+
+### Interface `ReceiveOffer`
+
+> Recebe as ofertas emitidas pela Loja
+
+* Type: sink
+* Topic: product/{productId}/alert
+* Message type: Product
+
+~~~json
+{
+  productId: number,
+  description: string,
+  price: double,
+  stores: [
+    {
+      storeid: number,
+      description: string
+    }
+  ]
+}
+~~~
+
+### Interface `CreateOffer`
+
+> Envia a oferta de um determinado produto
+
+* Type: source
+* Topic: product/+/alert
+* Message type: Product
+
+~~~json
+{
+  productId: number,
+  description: string,
+  price: double,
+  stores: [
+    {
+      storeid: number,
+      description: string
+    }
+  ]
+}
+~~~
+
+### Interface `RequestBuy`
+
+> Envia a requisição de compra de um produto para uma loja
+
+* Type: source
+* Topic: product/+/store/+/buy
+* Message type: Order
 
 ~~~json
 {
   orderId: string,
-  dueDate: date,
+  date: date,
   total: number,
-  items: [
+  statusOrdem: string
+  storeId: number,
+  products: [
     {
-         itemid: string,
-         quantity: number
+      productId: number,
+      quantity: number
     }
-  ]  
+  ],
+  payment:
+  {
+    date: date,
+    value: number,
+    Status: string
+  }
 }
 ~~~
 
-> Ou em formato de imagem, conforme exemplo:
+### Interface `Order`
 
-![Diagrama de Mensagens JSON](images/diagrama-interface-json.png)
+> Cria a ordem do produto
+
+* Type: sink
+* Topic:product/{productId}/store/{storeId}/buy
+* Message type: Order
+
+~~~json
+{
+  orderId: string,
+  date: date,
+  total: number,
+  statusOrdem: string
+  storeId: number
+  products: [
+    {
+      productId: number,
+      quantity: number
+    }
+  ]
+  payment:
+  {
+    date: date,
+    value: number,
+    Status: string
+  }
+}
+~~~
+
+### Interface `FollowOrder`
+
+> Acompanha o envio da ordem e seu status
+
+* Type: sink
+* Topic: order/{orderId}/send
+* Message type: Order
+
+~~~json
+{
+  orderId: string,
+  date: date,
+  total: number,
+  statusOrdem: string
+  storeId: number
+  products: [
+    {
+      productId: number,
+      quantity: number
+    }
+  ]
+  payment:
+  {
+    date: date,
+    value: number,
+    Status: string
+  }
+}
+~~~
+
+### Interface `SendOrder`
+
+> Envia a ordem ao barramento para que o cliente consiga acompanhar
+
+* Type: source
+* Topic: order/+/send
+* Message type: Order
+
+~~~json
+{
+  orderId: string,
+  date: date,
+  total: number,
+  storeId: number,
+  statusOrdem: string
+  products: [
+    {
+      productId: number,
+      quantity: number
+    }
+  ]
+  payment: {
+    date: date,
+    value: number,
+    Status: string
+  }
+}
+~~~
+
+### Interface `SendPayment`
+
+> Envia o status do pagamento da ordem e os dados do pagamento
+
+* Type: source
+* Topic: order/+/payment/+/accept
+* Message type: Payment
+
+~~~json
+{
+  paymentId: string,
+  date: date,
+  value: double,
+  status: string,
+  order:
+  {
+    orderId: string
+  }
+}
+~~~
+
+### Interface `ReceivePayment`
+
+> Recebe os dados do pagamento da ordem em questão
+
+* Type: sink
+* Topic:order/{orderId}/payment/{paymentId}/accept
+* Message type: Payment
+
+~~~json
+{
+  paymentId: string,
+  date: date,
+  value: double,
+  status: string,
+  order:
+  {
+    orderId: string
+  }
+}
+~~~
 
 # Nível 2
 
