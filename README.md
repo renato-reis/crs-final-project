@@ -108,7 +108,7 @@ As interfaces listadas são detalhadas a seguir:
 
 > Resumo do papel do componente e serviços que ele oferece.
 
-![Componente](images/N2-diagrama-subcomponentes.png)
+![Componente](images/N2-diagrama-subcomponentes2.png)
 ![Componente](images/N2-diagrama-subcomponentes-mvc.png)
 
 
