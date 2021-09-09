@@ -27,7 +27,10 @@ Para a construção dos diagramas, devem ser usados modelos disponíveis em: [Di
 
 # Equipe
 * `Amanda Souza Macedo Bacelli`
+* `Daniela Bouwman Codeceira`
+* `Jonata Laureano da Silva Cortez`
 * `Matheus Raposo Frauches Vieira Sias`
+* `Vitor Corrêa Oliveira`
 
 # Nível 1
 
@@ -99,7 +102,7 @@ Para a construção dos diagramas, devem ser usados modelos disponíveis em: [Di
 
 ## Componente `Loja`
 
-> Componente responsável emitir ordem, ofertas e exibir seus produtos mediante uma solicitação de busca
+> Componente responsável em emitir ordem, ofertas e exibir seus produtos mediante uma solicitação de busca
 
 ![Componente](images/N1-comp-loja.png)
 
@@ -457,8 +460,12 @@ Método | Objetivo
 
 > Apresente o diagrama referente ao protótipo conforme o modelo a seguir:
 
-![Modelo de diagrama no nível 2](images/diagrama-prototipo.png)
+![Diagrama Nivel 3](images/N3-diagrama.png)
 
 ### Detalhamento da interação de componentes
 
-> O detalhamento deve seguir o mesmo formato usado no Nível 2.
+> * O componente `Retrieve Product Info` assina no barramento mensagens de tópico "`product/+/find`" através da interface `ShowProduct`.
+  * Ao receber uma mensagem de tópico "`product/+/find`", dispara a busca das informações de um determinado produto.
+* O componente `Purchase and Info` se comunica com componentes externos pelo barramento:
+  * Para consultar o estoque e a descrição do produto, o componente `Purchase and Info` publica no barramento uma mensagem de tópico "`product/+/find`" através da interface `FindProducts` e assina mensagens de tópico "`product/{productId}/find`" através da interface `ShowProducts` que retorna a disponibilidade e descrição do produto.
+  * Para a realização da compra o componente `Purchase and Info` publica no barramento uma mensagem de tópico "`product/{productId}/buy`" através da interface "CreateOrder", que cria uma ordem de compra.
