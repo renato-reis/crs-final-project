@@ -26,6 +26,7 @@ Para a construção dos diagramas, devem ser usados modelos disponíveis em: [Di
 # Projeto `CRS - Marketplace`
 
 # Equipe
+* `Daniela Bouwman Codeceira`
 * `Matheus Raposo Frauches Vieira Sias`
 * `Vitor Corrêa Oliveira`
 
@@ -52,7 +53,7 @@ Para a construção dos diagramas, devem ser usados modelos disponíveis em: [Di
 
 > Diagrama do componente, conforme exemplo a seguir:
 
-![Componente](diagrama-componente-mensagens.png)
+![Componente](N1-message-01.jpg)
 
 **Interfaces**
 > Listagem das interfaces do componente.
@@ -73,27 +74,14 @@ As interfaces listadas são detalhadas a seguir:
 
 > Ou em formato de imagem, conforme exemplo:
 
-![Diagrama de Interface de Mensagens](images/diagrama-interface-mensagens.png)
+![Diagrama de Interface de Mensagens](images/N1-topicos-1.jpg)
+![Diagrama de Interface de Mensagens](images/N1-topicos-2.jpg)
 
 > Diagrama representando o esquema das mensagens JSON utilizadas na interface, pode ser em formato texto conforme exemplo:
 
-~~~json
-{
-  orderId: string,
-  dueDate: date,
-  total: number,
-  items: [
-    {
-         itemid: string,
-         quantity: number
-    }
-  ]  
-}
-~~~
-
-> Ou em formato de imagem, conforme exemplo:
-
-![Diagrama de Mensagens JSON](images/diagrama-interface-json.png)
+![Diagrama de Mensagens JSON](images/N1-message-01.jpg)
+![Diagrama de Mensagens JSON](images/N1-message-02.jpg)
+![Diagrama de Mensagens JSON](images/N1-message-03.jpg)
 
 # Nível 2
 
@@ -171,8 +159,12 @@ Método | Objetivo
 
 > Apresente o diagrama referente ao protótipo conforme o modelo a seguir:
 
-![Modelo de diagrama no nível 2](images/diagrama-prototipo.png)
+![Diagrama Nivel 3](images/N3-diagrama.png)
 
 ### Detalhamento da interação de componentes
 
-> O detalhamento deve seguir o mesmo formato usado no Nível 2.
+> * O componente `Retrieve Product Info` assina no barramento mensagens de tópico "`product/+/find`" através da interface `ShowProduct`.
+  * Ao receber uma mensagem de tópico "`product/+/find`", dispara a busca das informações de um determinado produto.
+* O componente `Purchase and Info` se comunica com componentes externos pelo barramento:
+  * Para consultar o estoque e a descrição do produto, o componente `Purchase and Info` publica no barramento uma mensagem de tópico "`product/+/find`" através da interface `FindProducts` e assina mensagens de tópico "`product/{productId}/find`" através da interface `ShowProducts` que retorna a disponibilidade e descrição do produto.
+  * Para a realização da compra o componente `Purchase and Info` publica no barramento uma mensagem de tópico "`product/{productId}/buy`" através da interface "CreateOrder", que cria uma ordem de compra.
