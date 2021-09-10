@@ -30,6 +30,7 @@ Para a construção dos diagramas, devem ser usados modelos disponíveis em: [Di
 * `Daniela Bouwman Codeceira`
 * `Jonata Laureano da Silva Cortez`
 * `Matheus Raposo Frauches Vieira Sias`
+* `Renato Fernandes Reis`
 * `Vitor Corrêa Oliveira`
 
 # Nível 1
@@ -409,50 +410,48 @@ As interfaces listadas são detalhadas a seguir:
 
 > Resumo do papel do componente e serviços que ele oferece.
 
+## Diagrama Geral do Nível 2
+
 ![Componente](images/N2-diagrama-subcomponentes2.png)
+
+## Diagrama MVC do Nível 2
+
 ![Componente](images/N2-diagrama-subcomponentes-mvc.png)
 
 
-**Interfaces**
-> Listagem das interfaces do componente.
+### Detalhamento da interação de componentes
 
-As interfaces listadas são detalhadas a seguir:
+* O componente `Distribuição de Ofertas` assina no barramento mensagens de tópico `product/+/alert` através da interface _ReceiveOffer_.
+  * Ao receber uma mensagem de tópico `product/+/alert` , dispara o início processo de seleção e ranqueamento dos produtos com base menor valor, produtos patrocinados e recomendaçoes com base no perfil do cliente.
 
-## Detalhamento das Interfaces
+* Internamente este evento é atendido por uma interface provida do componente `Busca Melhor Oferta`, que é responsável por selecionar e ranquear os produtos/ofertas.
 
-### Interface `<nome da interface>`
+* O componente `DataSet` assina no barramento mensagens de tópico `product/+/find` através da interface _AnalyseSearches_.
+  *  O componente analisa as buscas realizadas pelo cliente para enriquecimento do modelo de recomendações.
 
-![Diagrama da Interface](images/diagrama-interface-itableproducer.png)
+* O componente `DataSet` assina no barramento mensagens de tópico ``order/+/send`` através da interface _OrderAnalyser_.
+  *  O componente analisa as ordens emitidas pelas `Lojas` através do tópico _Order_ `order/+/send` e utiliza estas informaçoes para enriquecimento do modelo de recomendações.
 
-> Resumo do papel da interface.
+* O componente `DataSet` conecta-se ao dataset utilizado para treinar o modelo usado para recomendaçoes de produtos com base no perfil do cliente através da interface _Inference_
 
-Método | Objetivo
--------| --------
-`<id do método>` | `<objetivo do método e descrição dos parâmetros>`
+* O componente `Busca Melhor Oferta` notifica o componente `Filtra Produto Menor Valor` que uma oferta está a caminho através da interface _SolicitaMelhor Oferta_.
 
-## Exemplos:
+* O componente `Busca Melhor Oferta` notifica o componente `Recomenda Produtos` que uma oferta está a caminho através da interface _SolicitaRecomendacoes Produtos_.
 
-### Interface `ITableProducer`
+* O componente `Busca Melhor Oferta` notifica o componente `Busca Produtos Patrocinados` que uma oferta está a caminho através da interface _Solicita Produtos Patrocinados_.
 
-![Diagrama da Interface](images/diagrama-interface-itableproducer.png)
+* O componente `Filtra Produto Menor Valor` filtra a oferta com o menor valor e notifica o componente `Calcula Melhor Oferta` que uma oferta está a caminho através da interface _Solicita Produto Menor Valor_.
 
-Interface provida por qualquer fonte de dados que os forneça na forma de uma tabela.
+* O componente `Recomenda Produtos` solicita ao componente `DataSet`, através da interface _Inference_, recomendaçoes de ofertas com base no no perfil do cliente.
+  
+* O componente `Recomenda Produtos` notifica o componente `Calcula Melhor Oferta` que um conjunto de recomendações de ofertas está a caminho através da interface _Solicita Produto Recomendado_.
 
-Método | Objetivo
--------| --------
-`requestAttributes` | Retorna um vetor com o nome de todos os atributos (colunas) da tabela.
-`requestInstances` | Retorna uma matriz em que cada linha representa uma instância e cada coluna o valor do respectivo atributo (a ordem dos atributos é a mesma daquela fornecida por `requestAttributes`.
+* O componente `Busca Produtos Patrocinados` consulta sua base de dados de produtos partocinados e notifica o componente `Calcula Melhor Ofertas` que um conjuntos de produtos patrocinados está a caminho através da interface _Solicita Produtos Patrocinados_.
 
-### Interface `IDataSetProperties`
+* O componente `Calcula Melhor Ofertas` faz seleção e ranqueamento dos produtos com base menor valor, produtos patrocinados e recomendaçoes com base no perfil do cliente e notifica o componente `Notifica Cliente` sobre melhor oferta disponível através da interface _NotificaCliente_.
 
-![Diagrama da Interface](images/diagrama-interface-idatasetproperties.png)
+* O componente `Notifica Cliente` notifica o assinante/cliente sobre as melhores ofertas disponíveis baseado no seu perfil atraves da interface _SendAlert_
 
-Define o recurso (usualmente o caminho para um arquivo em disco) que é a fonte de dados.
-
-Método | Objetivo
--------| --------
-`getDataSource` | Retorna o caminho da fonte de dados.
-`setDataSource` | Define o caminho da fonte de dados, informado através do parâmetro `dataSource`.
 
 ## Diagrama do Nível 3
 
