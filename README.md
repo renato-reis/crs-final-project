@@ -412,7 +412,7 @@ As interfaces listadas são detalhadas a seguir:
 
 ## Diagrama Geral do Nível 2
 
-![Componente](images/N2-diagrama-subcomponentes2.png)
+![Componente](images/N2-diagrama-subcomponentes.png)
 
 ## Diagrama MVC do Nível 2
 
@@ -434,9 +434,9 @@ As interfaces listadas são detalhadas a seguir:
 
 * O componente `DataSet` conecta-se ao dataset utilizado para treinar o modelo usado para recomendaçoes de produtos com base no perfil do cliente através da interface _Inference_
 
-* O componente `Busca Melhor Oferta` notifica o componente `Filtra Produto Menor Valor` que uma oferta está a caminho através da interface _SolicitaMelhor Oferta_.
+* O componente `Busca Melhor Oferta` notifica o componente `Filtra Produto Menor Valor` que uma oferta está a caminho através da interface _Solicita Melhor Oferta_.
 
-* O componente `Busca Melhor Oferta` notifica o componente `Recomenda Produtos` que uma oferta está a caminho através da interface _SolicitaRecomendacoes Produtos_.
+* O componente `Busca Melhor Oferta` notifica o componente `Recomenda Produtos` que uma oferta está a caminho através da interface _Solicita Recomendacoes Produtos_.
 
 * O componente `Busca Melhor Oferta` notifica o componente `Busca Produtos Patrocinados` que uma oferta está a caminho através da interface _Solicita Produtos Patrocinados_.
 
@@ -448,9 +448,9 @@ As interfaces listadas são detalhadas a seguir:
 
 * O componente `Busca Produtos Patrocinados` consulta sua base de dados de produtos partocinados e notifica o componente `Calcula Melhor Ofertas` que um conjuntos de produtos patrocinados está a caminho através da interface _Solicita Produtos Patrocinados_.
 
-* O componente `Calcula Melhor Ofertas` faz seleção e ranqueamento dos produtos com base menor valor, produtos patrocinados e recomendaçoes com base no perfil do cliente e notifica o componente `Notifica Cliente` sobre melhor oferta disponível através da interface _NotificaCliente_.
+* O componente `Calcula Melhor Ofertas` faz seleção e ranqueamento dos produtos com base menor valor, produtos patrocinados e recomendaçoes com base no perfil do cliente e notifica o componente `Notifica Cliente` sobre melhor oferta disponível através da interface _Notifica Cliente_.
 
-* O componente `Notifica Cliente` notifica o assinante/cliente sobre as melhores ofertas disponíveis baseado no seu perfil atraves da interface _SendAlert_
+* O componente `Notifica Cliente` notifica o assinante/cliente sobre as melhores ofertas disponíveis baseado no seu perfil através da interface _SendAlert_
 
 
 ## Diagrama do Nível 3
