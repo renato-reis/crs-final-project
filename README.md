@@ -389,23 +389,6 @@ As interfaces listadas são detalhadas a seguir:
 
 > Apresente aqui o detalhamento do Nível 2 conforme detalhado na especificação com, no mínimo, as seguintes subseções:
 
-## Diagrama do Nível 2
-
-> Apresente um diagrama conforme o modelo a seguir:
-
-> ![Modelo de diagrama no nível 2](images/diagrama-subcomponentes.png)
-
-### Detalhamento da interação de componentes
-
-> O detalhamento deve seguir um formato de acordo com o exemplo a seguir:
-
-* O componente `Entrega Pedido Compra` assina no barramento mensagens de tópico "`pedido/+/entrega`" através da interface `Solicita Entrega`.
-  * Ao receber uma mensagem de tópico "`pedido/+/entrega`", dispara o início da entrega de um conjunto de produtos.
-* Os componentes `Solicita Estoque` e `Solicita Compra` se comunicam com componentes externos pelo barramento:
-  * Para consultar o estoque, o componente `Solicita Estoque` publica no barramento uma mensagem de tópico "`produto/<id>/estoque/consulta`" através da interface `Consulta Estoque` e assina mensagens de tópico "`produto/<id>/estoque/status`" através da interface `Posição Estoque` que retorna a disponibilidade do produto.
-
-> Para cada componente será apresentado um documento conforme o modelo a seguir:
-
 ## Componente `Distribuição de Ofertas`
 
 > Resumo do papel do componente e serviços que ele oferece.
